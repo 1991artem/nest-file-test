@@ -55,9 +55,10 @@ export class FileService {
           bolditalics: 'Helvetica-BoldOblique',
         },
       };
+
       const printer = new PdfPrinter(fonts);
 
-      const docDefinition: TDocumentDefinitions = {
+      const docDefinition = {
         content: [
           { text: 'Artem Puzik', fontSize: 25 },
           {
@@ -90,16 +91,20 @@ export class FileService {
           font: 'Helvetica',
         },
       };
+
       const pdfDoc = printer.createPdfKitDocument(docDefinition);
+
       pdfDoc.pipe(fs.createWriteStream(filePath + '/' + fileName));
       pdfDoc.end();
-
-      return { message: `File ${fileName}  has been created` };
-    } catch (e) {
-      throw new HttpException(
-        'Create file has been failed',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      console.log(image)
+      return {
+        success: true,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: 'Create file has been failed',
+      };
     }
   }
 }

@@ -7,22 +7,22 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @ApiProperty({ example: 'Ivam', description: 'First Name' })
   @IsOptional()
   @IsString({ message: 'String' })
-  @Length(5, 256, { message: 'Min: 5, Max: 256' })
+  @Length(1, 256, { message: 'Min: 1, Max: 256' })
   readonly firstName?: string;
 
   @ApiProperty({ example: 'Ivanov', description: 'Last Name' })
   @IsOptional()
   @IsString({ message: 'String' })
-  @Length(5, 256, { message: 'Min: 5, Max: 256' })
+  @Length(1, 256, { message: 'Min: 1, Max: 256' })
   readonly lastName?: string;
 
   @ApiProperty({ example: 'avatar.png', description: 'Image' })
   @IsOptional()
-  @IsString({ message: 'Image name' })
+  @IsString({ message: 'Image path' })
   readonly img?: string;
 
   @ApiProperty({ example: 'info.pdf', description: 'Pdf file' })
   @IsOptional()
-  @IsString({ message: 'Pdf name' })
+  @IsString({ message: 'Pdf file-name' })
   readonly pdf?: string;
 }

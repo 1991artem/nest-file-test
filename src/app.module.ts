@@ -6,7 +6,6 @@ import { FileModule } from './file/file.module';
 import { ConfigModule } from '@nestjs/config';
 import { User } from './user/entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
 import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
@@ -32,7 +31,7 @@ import { MulterModule } from '@nestjs/platform-express';
     AuthModule,
     FileModule,
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [],
 })
 export class AppModule {
