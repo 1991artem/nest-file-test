@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -12,35 +12,63 @@ export class UserService {
   ) {}
 
   async createUserPost(createUserDto: CreateUserDto) {
-    const user = this._usersRepository.create(createUserDto).save();
-    return user;
+    try {
+      const user = this._usersRepository.create(createUserDto).save();
+      return user;
+    } catch (error) {
+      throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async updateUserById(id: number, updateUserDto: UpdateUserDto) {
+    try {
+      const user: User | null = await this.findUserById(id);
+      return this._usersRepository.save({
+        ...user,
+        ...updateUserDto,
+      });
+    } catch (error) {
+      throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async removeUserById(id: number) {
+    try {
+      await this.findUserById(id);
+      await this._usersRepository.delete({
+        id,
+      });
+      return { message: `User (id:${id}) has been deleted` };
+    } catch (error) {
+      throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   async findUserByEmail(email: string) {
-    return this._usersRepository.findOneBy({
-      email,
-    });
+    try {
+      const user = await this._usersRepository.findOneBy({
+        email,
+      });
+      if (!user) {
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      }
+      return user;
+    } catch (error) {
+      throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   async findUserById(id: number) {
-    return this._usersRepository.findOneBy({
-      id,
-    });
+    try {
+      const user = await this._usersRepository.findOneBy({
+        id,
+      });
+      if (!user) {
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      }
+      return user;
+    } catch (error) {
+      throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

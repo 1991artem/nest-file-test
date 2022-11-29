@@ -2,11 +2,15 @@ import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const config = await app.get(ConfigService);
-  const PORT = config.get<number>('PORT') || 4200;
+  const PORT = config.get<number>('PORT') || 4500;
+
+  app.useGlobalPipes(new ValidationPipe());
+  app.setGlobalPrefix('api/v1');
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('TEST_NESTJS_PSQL')

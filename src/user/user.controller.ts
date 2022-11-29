@@ -1,23 +1,25 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
-  Patch,
+  Post,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
+import { JwtAuthGuard } from 'src/auth/jwt-token.guard';
 
 @ApiTags('User')
-@Controller('api/v1/user')
+@Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Create user' })
   @ApiResponse({ status: 201, type: User })
   @Post()
@@ -25,26 +27,24 @@ export class UserController {
     return this.userService.createUserPost(createUserDto);
   }
 
-  @Get()
-  findAll() {
-    return this.userService.findAll();
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Update user by id' })
+  @Post(':id')
+  updateUserById(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.userService.updateUserById(+id, updateUserDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
-  }
-
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Delete user by id' })
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  removeUserById(@Param('id') id: string) {
+    return this.userService.removeUserById(+id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get user  email' })
   @ApiResponse({ status: 200, type: [User] })
   @Get()

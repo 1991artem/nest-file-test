@@ -6,6 +6,8 @@ import { FileModule } from './file/file.module';
 import { ConfigModule } from '@nestjs/config';
 import { User } from './user/entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AppController } from './app.controller';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
@@ -23,11 +25,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       synchronize: true,
       logging: false,
     }),
+    MulterModule.register({
+      dest: '../files/',
+    }),
     UserModule,
     AuthModule,
     FileModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule {

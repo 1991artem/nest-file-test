@@ -1,34 +1,46 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { FileService } from './file.service';
+import {
+  Body,
+  Controller,
+  Get,
+  ParseFilePipeBuilder,
+  Post,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-token.guard';
 import { CreateFileDto } from './dto/create-file.dto';
-import { UpdateFileDto } from './dto/update-file.dto';
+import { FileService } from './file.service';
 
+@ApiTags('File')
 @Controller('file')
 export class FileController {
   constructor(private readonly fileService: FileService) {}
 
-  @Post()
-  create(@Body() createFileDto: CreateFileDto) {
-    return this.fileService.create(createFileDto);
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Upload image' })
+  @Post(':id/file')
+  @UseInterceptors(FileInterceptor('image'))
+  uploadFile(
+    @Body() body: CreateFileDto,
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({
+          fileType: 'png',
+        })
+        .build(),
+    )
+    file: Express.Multer.File,
+  ) {
+    return this.fileService.uploadFile(body, file);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Create PDF file' })
   @Get()
-  findAll() {
-    return this.fileService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.fileService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFileDto: UpdateFileDto) {
-    return this.fileService.update(+id, updateFileDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.fileService.remove(+id);
+  createPdfFile(@Body() body: CreateFileDto) {
+    return this.fileService.createPdfFile(body);
   }
 }

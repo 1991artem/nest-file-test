@@ -1,31 +1,28 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateUserDto } from './create-user.dto';
-import { IsEmail, IsOptional, IsString, Length } from 'class-validator';
+import { IsOptional, IsString, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
   @ApiProperty({ example: 'Ivam', description: 'First Name' })
+  @IsOptional()
   @IsString({ message: 'String' })
   @Length(5, 256, { message: 'Min: 5, Max: 256' })
-  @IsOptional()
-  readonly firstName: string;
+  readonly firstName?: string;
 
   @ApiProperty({ example: 'Ivanov', description: 'Last Name' })
+  @IsOptional()
   @IsString({ message: 'String' })
   @Length(5, 256, { message: 'Min: 5, Max: 256' })
-  @IsOptional()
-  readonly lastName: string;
-
-  @ApiProperty({ example: 'user@user.com', description: 'Email' })
-  @IsEmail()
-  readonly email: string;
-
-  @ApiProperty({ example: 'User123!', description: 'Password' })
-  @IsString({ message: 'Password' })
-  @Length(8, 256, { message: 'Min: 8, Max: 256' })
-  readonly password: string;
+  readonly lastName?: string;
 
   @ApiProperty({ example: 'avatar.png', description: 'Image' })
+  @IsOptional()
   @IsString({ message: 'Image name' })
-  readonly img: string;
+  readonly img?: string;
+
+  @ApiProperty({ example: 'info.pdf', description: 'Pdf file' })
+  @IsOptional()
+  @IsString({ message: 'Pdf name' })
+  readonly pdf?: string;
 }
