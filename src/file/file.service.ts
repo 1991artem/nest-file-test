@@ -1,11 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import * as PdfPrinter from 'pdfmake';
+import PdfPrinter from 'pdfmake';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as uuid from 'uuid';
 import { UserService } from 'src/user/user.service';
 import { CreateFileDto } from './dto/create-file.dto';
 import { User } from 'src/user/entities/user.entity';
+import { TDocumentDefinitions } from 'pdfmake/interfaces';
 
 @Injectable()
 export class FileService {
@@ -56,7 +57,7 @@ export class FileService {
       };
       const printer = new PdfPrinter(fonts);
 
-      const docDefinition = {
+      const docDefinition: TDocumentDefinitions = {
         content: [
           { text: 'Artem Puzik', fontSize: 25 },
           {

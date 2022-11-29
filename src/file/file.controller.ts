@@ -21,7 +21,7 @@ export class FileController {
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Upload image' })
-  @Post(':id/file')
+  @Post()
   @UseInterceptors(FileInterceptor('image'))
   uploadFile(
     @Body() body: CreateFileDto,

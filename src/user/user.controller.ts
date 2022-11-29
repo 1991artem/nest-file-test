@@ -10,8 +10,7 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { User } from './entities/user.entity';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-token.guard';
 
 @ApiTags('User')
@@ -21,7 +20,6 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Create user' })
-  @ApiResponse({ status: 201, type: User })
   @Post()
   createUser(createUserDto: CreateUserDto) {
     return this.userService.createUserPost(createUserDto);
@@ -46,7 +44,6 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get user  email' })
-  @ApiResponse({ status: 200, type: [User] })
   @Get()
   findUserByEmail(email: string) {
     return this.userService.findUserByEmail(email);

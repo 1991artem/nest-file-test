@@ -1,9 +1,15 @@
 import { Controller, Get, Res } from '@nestjs/common';
+import { Cookies } from './decorators/cookie.decorator';
 
 @Controller()
 export class AppController {
-  @Get()
-  index(@Res() res) {
-    res.status(302).redirect('api/v1/singup');
+  @Get('get-cookie')
+  index(@Cookies() cookie, @Res() response) {
+    console.log(cookie)
+    if (!cookie.token) {
+      response.status(302).redirect('/singup');
+    } else {
+      response.status(302).redirect('/singin');
+    }
   }
 }
