@@ -1,5 +1,4 @@
 import {
-  ExecutionContext,
   HttpException,
   HttpStatus,
   Injectable,
@@ -7,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from 'bcryptjs';
-import { FastifyReply } from 'fastify/types/reply';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
